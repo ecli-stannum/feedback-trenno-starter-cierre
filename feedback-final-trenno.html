@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRENNO IA Starter — Feedback Final</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0A0F0F; font-family: 'Barlow', sans-serif; color: #E8F0EF; min-height: 100vh; }
+    .form-root { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .header { text-align: center; margin-bottom: 56px; }
+    .header-tag { display: inline-block; border: 1px solid #00E5CC; color: #00E5CC; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; padding: 5px 14px; border-radius: 2px; margin-bottom: 20px; }
+    .header h1 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(38px, 6vw, 56px); font-weight: 800; text-transform: uppercase; color: #fff; line-height: 1; margin-bottom: 8px; letter-spacing: 1px; }
+    .header h1 span { color: #00E5CC; }
+    .header-sub { font-size: 14px; color: #7A9E9B; max-width: 440px; margin: 16px auto 0; line-height: 1.6; }
+    .header-line { width: 48px; height: 3px; background: #00E5CC; margin: 20px auto 0; border-radius: 2px; }
+    .progress-bar-wrap { margin-bottom: 48px; }
+    .progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .progress-label span { font-size: 12px; color: #4A6B68; }
+    .progress-track { height: 3px; background: #1E2D2B; border-radius: 2px; }
+    .progress-fill { height: 100%; background: #00E5CC; border-radius: 2px; transition: width 0.4s ease; }
+    .section-card { background: #111918; border: 1px solid #1E2D2B; border-radius: 12px; padding: 32px; margin-bottom: 20px; position: relative; overflow: hidden; }
+    .section-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #00E5CC, transparent); opacity: 0.6; }
+    .section-card.highlight-card { border-color: rgba(0,229,204,0.3); }
+    .section-card.highlight-card::before { opacity: 1; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .section-number { width: 32px; height: 32px; background: #00E5CC; color: #000; font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
+    .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
+    .section-desc { font-size: 13px; color: #6B8E8B; margin-top: 2px; font-style: italic; }
+    .field { margin-bottom: 28px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label { display: block; font-size: 14px; font-weight: 600; color: #C8DFDD; margin-bottom: 10px; line-height: 1.4; }
+    .req { color: #00E5CC; margin-left: 3px; }
+    .optional { font-size: 11px; color: #4A6B68; font-weight: 400; margin-left: 6px; }
+    .field-note { font-size: 12px; color: #4A6B68; margin-top: 6px; font-style: italic; }
+    .text-input { width: 100%; background: #0D1918; border: 1px solid #1E2D2B; border-radius: 8px; padding: 12px 14px; font-size: 14px; font-family: 'Barlow', sans-serif; color: #E8F0EF; outline: none; transition: border-color 0.2s; }
+    .text-input:focus { border-color: #00E5CC; }
+    .text-input::placeholder { color: #2E4543; }
+    textarea.text-input { resize: vertical; min-height: 90px; line-height: 1.5; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+    .scale-numbers { display: flex; gap: 6px; }
+    @media (max-width: 560px) { .scale-numbers { gap: 3px; } }
+    .scale-btn { flex: 1; min-width: 0; aspect-ratio: 1; background: #0D1918; border: 1px solid #1E2D2B; border-radius: 6px; color: #4A6B68; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+    .scale-btn:hover { border-color: #00E5CC; color: #00E5CC; }
+    .scale-btn.selected { background: #00E5CC; border-color: #00E5CC; color: #000; }
+    .scale-labels { display: flex; justify-content: space-between; margin-top: 8px; }
+    .scale-label { font-size: 11px; color: #4A6B68; font-style: italic; }
+    .choices { display: flex; gap: 10px; flex-wrap: wrap; }
+    .choice-btn { background: #0D1918; border: 1px solid #1E2D2B; border-radius: 6px; padding: 10px 20px; font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 500; color: #7A9E9B; cursor: pointer; transition: all 0.15s; }
+    .choice-btn:hover { border-color: #00E5CC; color: #00E5CC; }
+    .choice-btn.selected { background: rgba(0,229,204,0.1); border-color: #00E5CC; color: #00E5CC; }
+    .trainer-block { background: #0D1918; border: 1px solid #1E2D2B; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+    .trainer-block:last-child { margin-bottom: 0; }
+    .trainer-index { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00E5CC; margin-bottom: 16px; opacity: 0.7; }
+    .field-divider { border: none; border-top: 1px solid #1E2D2B; margin: 24px 0; }
+    .highlight-box { background: rgba(0,229,204,0.05); border: 1px solid rgba(0,229,204,0.2); border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; }
+    .highlight-box p { font-size: 13px; color: #7AC4BF; line-height: 1.6; }
+    .highlight-box strong { color: #00E5CC; }
+    .cx-score-live { margin-top: 20px; padding: 14px 18px; background: #0D1918; border-radius: 8px; border: 1px solid #1E2D2B; display: flex; align-items: center; justify-content: space-between; }
+    .cx-score-live-label { font-size: 12px; color: #4A6B68; }
+    .cx-score-live-value { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; color: #00E5CC; }
+    .submit-wrap { margin-top: 40px; text-align: center; }
+    .submit-btn { background: #00E5CC; color: #000; border: none; border-radius: 8px; padding: 16px 56px; font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .submit-btn:hover:not(:disabled) { background: #fff; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .submit-note { margin-top: 12px; font-size: 12px; color: #3A5A57; }
+    .success { text-align: center; padding: 80px 24px; }
+    .success-icon { font-size: 48px; margin-bottom: 24px; }
+    .success h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 12px; }
+    .success h2 span { color: #00E5CC; }
+    .success p { font-size: 15px; color: #7A9E9B; line-height: 1.6; max-width: 400px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    // ─────────────────────────────────────────────────────────
+    // PASO 1: PEGAR ACÁ LA URL DEL APPS SCRIPT
+    // ─────────────────────────────────────────────────────────
+    const APPS_SCRIPT_URL = "PEGAR_URL_DEL_APPS_SCRIPT_ACÁ";
+    // ─────────────────────────────────────────────────────────
+
+    const { useState } = React;
+
+    const ScaleField = ({ label, required, leftLabel, rightLabel, value, onChange, note }) => (
+      <div className="field">
+        <label className="field-label">
+          {label}{required && <span className="req">*</span>}
+        </label>
+        <div>
+          <div className="scale-numbers">
+            {[1,2,3,4,5,6,7,8,9,10,11].map(n => (
+              <button key={n} type="button"
+                className={"scale-btn" + (value === n ? " selected" : "")}
+                onClick={() => onChange(n)}>{n}
+              </button>
+            ))}
+          </div>
+          {(leftLabel || rightLabel) && (
+            <div className="scale-labels">
+              <span className="scale-label">{leftLabel}</span>
+              <span className="scale-label">{rightLabel}</span>
+            </div>
+          )}
+        </div>
+        {note && <p className="field-note">{note}</p>}
+      </div>
+    );
+
+    const ChoiceField = ({ label, required, optional, options, value, onChange, note }) => (
+      <div className="field">
+        <label className="field-label">
+          {label}{required && <span className="req">*</span>}
+          {optional && <span className="optional">(opcional)</span>}
+        </label>
+        <div className="choices">
+          {options.map(opt => (
+            <button key={opt} type="button"
+              className={"choice-btn" + (value === opt ? " selected" : "")}
+              onClick={() => onChange(opt)}>{opt}
+            </button>
+          ))}
+        </div>
+        {note && <p className="field-note">{note}</p>}
+      </div>
+    );
+
+    const TextField = ({ label, required, optional, placeholder, value, onChange, multiline, note }) => (
+      <div className="field">
+        <label className="field-label">
+          {label}{required && <span className="req">*</span>}
+          {optional && <span className="optional">(opcional)</span>}
+        </label>
+        {multiline
+          ? <textarea className="text-input" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} rows={3} />
+          : <input className="text-input" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} />
+        }
+        {note && <p className="field-note">{note}</p>}
+      </div>
+    );
+
+    const emptyTrainer = () => ({ nombre: "", rating: null, fortaleza: "", mejora: "", repetir: "" });
+
+    function App() {
+      const [submitted, setSubmitted] = useState(false);
+      const [loading, setLoading] = useState(false);
+      const [form, setForm] = useState({
+        nombre: "", apellido: "", email: "", empresa: "", rol: "",
+        trImplemento: "", trEvidencia: "", trImpactoNegocio: null, trWorkflows: "", trFreno: "",
+        satisfaccionFinal: null, nps: null, npsMotivo: "",
+        cx: { preguntas: null, acompanamiento: null, consignas: null, ritmo: null,
+              dificultad: null, material: null, aplicabilidad: null,
+              comunicacion: null, puntualidad: null, valor: null },
+        entrenadores: [emptyTrainer(), emptyTrainer(), emptyTrainer()],
+        mejorSesion: "", mejorSesionRazon: "", menorImpacto: "", menorImpactoRazon: "",
+        faltoEnPrograma: "", ltvRenovaria: "", ltvProximoPaso: "",
+        refConoce: "", refEmpresa: "", testimonio: "", testimonioPermiso: "", unaCosa: "",
+      });
+
+      const set = k => v => setForm(f => ({ ...f, [k]: v }));
+      const setCX = k => v => setForm(f => ({ ...f, cx: { ...f.cx, [k]: v } }));
+      const setEnt = (i, k) => v => setForm(f => {
+        const arr = [...f.entrenadores];
+        arr[i] = { ...arr[i], [k]: v };
+        return { ...f, entrenadores: arr };
+      });
+
+      const cxVals = Object.values(form.cx).filter(Boolean);
+      const cxScore = cxVals.length > 0
+        ? (cxVals.reduce((a,b) => a+b, 0) / cxVals.length).toFixed(1)
+        : null;
+
+      const filled = [form.satisfaccionFinal, form.nps, form.trImplemento,
+        form.trImpactoNegocio, form.mejorSesion, form.ltvRenovaria,
+        form.refConoce, form.unaCosa, cxVals.length >= 5 ? 1 : null,
+        form.entrenadores[0]?.rating].filter(Boolean).length;
+      const progress = Math.round((filled / 10) * 100);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...form, formType: "final" })
+          });
+          setSubmitted(true);
+        } catch(err) {
+          console.error("Error:", err);
+          alert("Hubo un error al enviar. Intentá de nuevo.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      if (submitted) return (
+        <div className="form-root">
+          <div className="success">
+            <div className="success-icon">⚡</div>
+            <h2>Ciclo <span>cerrado</span></h2>
+            <p>Completaste TRENNO IA Starter. Tu feedback es el insumo más valioso que tiene STANNUM para seguir mejorando. Gracias por entrenar con intensidad.</p>
+          </div>
+        </div>
+      );
+
+      return (
+        <div className="form-root">
+          <div className="header">
+            <div className="header-tag">Cierre de ciclo</div>
+            <h1>TRENNO IA<br /><span>Starter</span></h1>
+            <p className="header-sub">Completaste el programa. Este formulario cierra tu ciclo y define cómo STANNUM entrena a la próxima empresa.</p>
+            <div className="header-line" />
+          </div>
+
+          <div className="progress-bar-wrap">
+            <div className="progress-label"><span>Progreso</span><span>{progress}%</span></div>
+            <div className="progress-track"><div className="progress-fill" style={{ width: progress + "%" }} /></div>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+
+            {/* 1 — PERFIL */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">1</div>
+                <div><div className="section-title">Perfil</div></div>
+              </div>
+              <div className="two-col">
+                <TextField label="Nombre" required placeholder="Tu nombre" value={form.nombre} onChange={set("nombre")} />
+                <TextField label="Apellido" required placeholder="Tu apellido" value={form.apellido} onChange={set("apellido")} />
+              </div>
+              <div className="two-col">
+                <TextField label="Correo electrónico" required placeholder="nombre@empresa.com" value={form.email} onChange={set("email")} />
+                <TextField label="Empresa" required placeholder="Nombre de tu organización" value={form.empresa} onChange={set("empresa")} />
+              </div>
+              <TextField label="Rol o posición" required placeholder="Ej: Gerente Comercial, Director de Operaciones..." value={form.rol} onChange={set("rol")} />
+            </div>
+
+            {/* 2 — TRANSFORMACIÓN REAL */}
+            <div className="section-card highlight-card">
+              <div className="section-header">
+                <div className="section-number">2</div>
+                <div>
+                  <div className="section-title">Transformación Real</div>
+                  <div className="section-desc">Evidencia concreta de lo que implementaste</div>
+                </div>
+              </div>
+              <div className="highlight-box">
+                <p>TRENNO no mide si entendiste la IA. Mide si la <strong>implementaste en tu negocio</strong>.</p>
+              </div>
+              <ChoiceField label="¿Implementaste herramientas o workflows de IA en tu trabajo durante el ciclo?" required
+                options={["Sí, de forma activa","Parcialmente","Empecé pero no consolidé","No llegué a implementar"]}
+                value={form.trImplemento} onChange={set("trImplemento")} />
+              <TextField label="¿Qué implementaste concretamente? ¿En qué tarea, proceso o área de tu negocio usás IA hoy?" required multiline
+                placeholder="Ej: Armé un GPT para analizar propuestas / Uso RODOIR en todas mis reuniones..."
+                value={form.trEvidencia} onChange={set("trEvidencia")}
+                note="Si no implementaste nada, escribí por qué. Eso también es información valiosa." />
+              <ScaleField label="¿En qué medida el programa impactó en tu trabajo real o en tu negocio?" required
+                leftLabel="Sin impacto" rightLabel="Impacto transformador"
+                value={form.trImpactoNegocio} onChange={set("trImpactoNegocio")} />
+              <TextField label="¿Qué workflow o herramienta seguís usando hoy después del programa?" optional multiline
+                placeholder="Ej: Uso NotebookLM para resumir reuniones / Tengo un GPT de ventas activo..."
+                value={form.trWorkflows} onChange={set("trWorkflows")} />
+              <TextField label="¿Qué te impidió implementar más de lo que querías?" optional multiline
+                placeholder="Tiempo, claridad, soporte, nivel del contenido..."
+                value={form.trFreno} onChange={set("trFreno")} />
+            </div>
+
+            {/* 3 — SATISFACCIÓN + NPS */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">3</div>
+                <div>
+                  <div className="section-title">Satisfacción y recomendación</div>
+                  <div className="section-desc">Evaluación global del ciclo completo</div>
+                </div>
+              </div>
+              <ScaleField label="¿Cómo valorás tu experiencia en TRENNO IA Starter a lo largo de todo el ciclo?" required
+                leftLabel="Muy insatisfecho" rightLabel="Extraordinario"
+                value={form.satisfaccionFinal} onChange={set("satisfaccionFinal")} />
+              <hr className="field-divider" />
+              <ScaleField label="¿Qué tan probable es que recomiendes TRENNO IA a algún colega o a otra empresa?" required
+                leftLabel="No lo recomendaría" rightLabel="Lo recomendaría sin dudar"
+                value={form.nps} onChange={set("nps")} />
+              <TextField label="¿Por qué pusiste ese número? ¿Qué fue lo que más pesó en tu decisión?" required multiline
+                placeholder="Sé directo. Esta respuesta define cómo STANNUM mejora el programa para la próxima empresa."
+                value={form.npsMotivo} onChange={set("npsMotivo")} />
+            </div>
+
+            {/* 4 — CX SCORE */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">4</div>
+                <div>
+                  <div className="section-title">Calidad del entrenamiento</div>
+                  <div className="section-desc">Evaluá cada aspecto del ciclo completo</div>
+                </div>
+              </div>
+              {[
+                ["preguntas",    "Gestión de preguntas y dudas en sesión"],
+                ["acompanamiento","Acompañamiento durante las sesiones"],
+                ["consignas",    "Claridad de consignas e instrucciones"],
+                ["ritmo",        "Ritmo y tiempos de las sesiones"],
+                ["dificultad",   "Nivel de dificultad adecuado al grupo"],
+                ["material",     "Calidad del material entregado"],
+                ["aplicabilidad","Aplicabilidad del contenido a tu negocio real"],
+                ["comunicacion", "Comunicación entre sesiones"],
+                ["puntualidad",  "Puntualidad y logística del programa"],
+                ["valor",        "Percepción de valor del programa"],
+              ].map(([key, label]) => (
+                <div className="field" key={key}>
+                  <label className="field-label">{label}<span className="req">*</span></label>
+                  <div className="scale-numbers">
+                    {[1,2,3,4,5,6,7,8,9,10,11].map(n => (
+                      <button key={n} type="button"
+                        className={"scale-btn" + (form.cx[key] === n ? " selected" : "")}
+                        onClick={() => setCX(key)(n)}>{n}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div className="cx-score-live">
+                <span className="cx-score-live-label">Puntaje promedio del ciclo</span>
+                <span className="cx-score-live-value">{cxScore ? cxScore + " / 11" : "— / 11"}</span>
+              </div>
+            </div>
+
+            {/* 5 — ENTRENADORES */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">5</div>
+                <div>
+                  <div className="section-title">Los entrenadores</div>
+                  <div className="section-desc">Evaluá a cada entrenador que participó en tu ciclo</div>
+                </div>
+              </div>
+              <div className="highlight-box">
+                <p>Completá un bloque por cada entrenador. <strong>Escribí su nombre</strong> para que ECLI pueda identificar cada evaluación.</p>
+              </div>
+              {form.entrenadores.map((ent, i) => (
+                <div className="trainer-block" key={i}>
+                  <div className="trainer-index">Entrenador {i + 1}{i > 0 ? " — opcional si no hubo" : ""}</div>
+                  <TextField
+                    label="Nombre del entrenador"
+                    required={i === 0} optional={i > 0}
+                    placeholder="Nombre y apellido..."
+                    value={ent.nombre} onChange={v => setEnt(i,"nombre")(v)}
+                  />
+                  {(ent.nombre.length > 0 || i === 0) && (
+                    <>
+                      <ScaleField label="Evaluación general"
+                        required={i === 0}
+                        leftLabel="Por debajo de lo esperado" rightLabel="Superó todas las expectativas"
+                        value={ent.rating} onChange={v => setEnt(i,"rating")(v)} />
+                      <TextField label="Mayor fortaleza de este entrenador"
+                        required={i === 0} multiline
+                        placeholder="Lo que más valoraste de cómo entrenó, explicó o acompañó al grupo..."
+                        value={ent.fortaleza} onChange={v => setEnt(i,"fortaleza")(v)} />
+                      <TextField label="¿Qué debería mejorar?"
+                        required={i === 0} multiline
+                        placeholder="Sé específico. Esta información va directo al entrenador y al Director ECLI."
+                        value={ent.mejora} onChange={v => setEnt(i,"mejora")(v)} />
+                      <ChoiceField label="¿Volverías a entrenar con este entrenador?"
+                        required={i === 0}
+                        options={["Sí, sin dudar","Sí, con ajustes","Preferiría otro entrenador"]}
+                        value={ent.repetir} onChange={v => setEnt(i,"repetir")(v)} />
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* 6 — EL PROGRAMA */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">6</div>
+                <div>
+                  <div className="section-title">El programa</div>
+                  <div className="section-desc">Feedback estructural sobre las 6 sesiones</div>
+                </div>
+              </div>
+              <ChoiceField label="¿Cuál fue la sesión de mayor impacto para vos?" required
+                options={["S1 — Prompts","S2 — Personalización","S3 — GPTs propios","S4 — Fine Tuning","S5 — Automatización","S6 — Agentes"]}
+                value={form.mejorSesion} onChange={set("mejorSesion")} />
+              <TextField label="¿Por qué esa sesión fue la más valiosa?" required multiline
+                placeholder="Qué aprendiste, qué pudiste aplicar, qué te cambió la perspectiva..."
+                value={form.mejorSesionRazon} onChange={set("mejorSesionRazon")} />
+              <hr className="field-divider" />
+              <ChoiceField label="¿Cuál fue la sesión de menor impacto para vos?" required
+                options={["S1 — Prompts","S2 — Personalización","S3 — GPTs propios","S4 — Fine Tuning","S5 — Automatización","S6 — Agentes"]}
+                value={form.menorImpacto} onChange={set("menorImpacto")} />
+              <TextField label="¿Por qué esa sesión tuvo menos impacto? ¿Qué se podría mejorar?" required multiline
+                placeholder="Muy teórica, poca práctica, no conectó con mi negocio..."
+                value={form.menorImpactoRazon} onChange={set("menorImpactoRazon")} />
+              <hr className="field-divider" />
+              <TextField label="¿Qué tema, herramienta o caso práctico faltó en el programa?" optional multiline
+                placeholder="Algo que esperabas ver y no estuvo..."
+                value={form.faltoEnPrograma} onChange={set("faltoEnPrograma")} />
+            </div>
+
+            {/* 7 — LO QUE VIENE */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">7</div>
+                <div>
+                  <div className="section-title">Lo que viene</div>
+                  <div className="section-desc">Para que STANNUM pueda acompañarte mejor</div>
+                </div>
+              </div>
+              <ChoiceField label="¿Considerarías continuar entrenando con STANNUM en el próximo programa disponible?" required
+                options={["Sí, definitivamente","Es probable","Necesito evaluarlo","Por ahora no"]}
+                value={form.ltvRenovaria} onChange={set("ltvRenovaria")}
+                note="Esta respuesta es confidencial y no genera ningún compromiso comercial." />
+              <ChoiceField label="Si continuaras, ¿cuál sería tu próximo paso ideal?" optional
+                options={["Profundizar automatizaciones","Desarrollar agentes","Entrenar a más personas del equipo","Otro programa","No lo sé todavía"]}
+                value={form.ltvProximoPaso} onChange={set("ltvProximoPaso")} />
+            </div>
+
+            {/* 8 — REFERIDOS */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">8</div>
+                <div>
+                  <div className="section-title">Referidos</div>
+                  <div className="section-desc">Ayudanos a llegar a más empresas</div>
+                </div>
+              </div>
+              <ChoiceField label="¿Conocés algún colega o empresa que se beneficiaría de TRENNO IA Starter?" required
+                options={["Sí, tengo alguien en mente","Tal vez","No por ahora"]}
+                value={form.refConoce} onChange={set("refConoce")} />
+              {form.refConoce === "Sí, tengo alguien en mente" && (
+                <TextField label="¿Podés dejarnos el nombre o la empresa? Los contactamos de tu parte." optional
+                  placeholder="Nombre / Empresa / Industria / Contacto..."
+                  value={form.refEmpresa} onChange={set("refEmpresa")} />
+              )}
+            </div>
+
+            {/* 9 — TESTIMONIO */}
+            <div className="section-card">
+              <div className="section-header">
+                <div className="section-number">9</div>
+                <div>
+                  <div className="section-title">Tu testimonio</div>
+                  <div className="section-desc">Opcional — pero muy valorado</div>
+                </div>
+              </div>
+              <div className="highlight-box">
+                <p>Si el programa generó un impacto real, tu testimonio ayuda a que otras empresas tomen la decisión de entrenar. <strong>Solo se usa con tu autorización explícita.</strong></p>
+              </div>
+              <TextField label="¿Qué le dirías a un colega que está evaluando hacer TRENNO IA Starter?" optional multiline
+                placeholder="En tus propias palabras — qué ganaste, qué cambió..."
+                value={form.testimonio} onChange={set("testimonio")} />
+              {form.testimonio.length > 20 && (
+                <ChoiceField label="¿Autorizás a STANNUM a usar este testimonio en sus comunicaciones?" optional
+                  options={["Sí, con mi nombre y empresa","Sí, de forma anónima","Prefiero que no se use"]}
+                  value={form.testimonioPermiso} onChange={set("testimonioPermiso")} />
+              )}
+            </div>
+
+            {/* 10 — UNA SOLA COSA */}
+            <div className="section-card highlight-card">
+              <div className="section-header">
+                <div className="section-number">10</div>
+                <div>
+                  <div className="section-title">Una sola cosa</div>
+                  <div className="section-desc">La última pregunta — y la más importante</div>
+                </div>
+              </div>
+              <div className="highlight-box">
+                <p><strong>No te pedimos una lista.</strong> Te pedimos la <strong>única cosa</strong> que, si STANNUM cambiara, haría que este programa fuera verdaderamente extraordinario para vos.</p>
+              </div>
+              <TextField label="Si pudieras cambiar UNA SOLA COSA de todo el programa TRENNO IA Starter, ¿cuál sería?" required multiline
+                placeholder="Escribila con toda la precisión que puedas. Esta respuesta va directo a la Dirección de STANNUM."
+                value={form.unaCosa} onChange={set("unaCosa")} />
+            </div>
+
+            <div className="submit-wrap">
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {loading ? "Enviando..." : "Cerrar ciclo"}
+              </button>
+              <p className="submit-note">Tus respuestas son confidenciales y se usan exclusivamente para mejorar el programa.</p>
+            </div>
+
+          </form>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
