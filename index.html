@@ -85,7 +85,7 @@
     // ─────────────────────────────────────────────────────────
     // PASO 1: PEGAR ACÁ LA URL DEL APPS SCRIPT
     // ─────────────────────────────────────────────────────────
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCBBy9NpxxhvyMn0IGrf50OnQ53BbX_r34wIVFUzpHlmAeTWertBXDD8NDRgxixsLFCg/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyb_HSLmkEWWa91tlCXUbhnhsTgJD4ulVdKMZBip-agCMttWfU1vGZj4Rg7161-Rou0JQ/exec";
     // ─────────────────────────────────────────────────────────
 
     const { useState } = React;
@@ -188,10 +188,11 @@
         e.preventDefault();
         setLoading(true);
         try {
-          const payload = JSON.stringify({ ...form, formType: "final" });
-          const fd = new FormData();
-          fd.append("payload", payload);
-          const res = await fetch(APPS_SCRIPT_URL, { method: "POST", body: fd });
+          const res = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...form, formType: "final" })
+          });
           const json = await res.json();
           if (json.success) {
             setSubmitted(true);
